@@ -2,57 +2,167 @@ RELEASE 1:
 
 1) Insert
     1.a) Insert 3 product type.
+INSERT INTO product_types (name) VALUES
+  ('Type 1'),
+  ('Type 2'),
+  ('Type 3');
+
 
     1.b) Insert 2 product dengan product type id = 1
+INSERT INTO products (name, product_type_id) VALUES
+  ('Product 1', 1),
+  ('Product 2', 1);
+
 
     1.c) Insert 3 product dengan product type id = 2
+INSERT INTO products (name, product_type_id) VALUES
+  ('Product 3', 2),
+  ('Product 4', 2),
+  ('Product 5', 2);
+
 
     1.d) Insert 3 product dengan product type id = 3
+INSERT INTO products (name, product_type_id) VALUES
+  ('Product 6', 3),
+  ('Product 7', 3),
+  ('Product 8', 3);
+
 
     1.e) Insert product description pada setiap product.
+UPDATE products
+SET description = 'Deskripsi produk 1'
+WHERE id = 1;
+UPDATE products
+SET description = 'Deskripsi produk 2'
+WHERE id = 2;
 
     1.f) Insert 3 payment methods.
+INSERT INTO payment_methods (name) VALUES
+  ('Bank'),
+  ('E-wallet'),
+  ('COD');
+
 
     1.g) Insert 5 user pada tabel user.
+INSERT INTO users (name, gender) VALUES
+  ('User 1', 'Laki-laki'),
+  ('User 2', 'Perempuan'),
+  ('User 3', 'Laki-laki'),
+  ('User 4', 'Perempuan'),
+  ('User 5', 'Laki-laki');
+
 
     1.h) Insert 3 transaksi di masing-masing user (min 3 user). (soal berlanjut ke soal 1.j)
+-- Untuk setiap user, masukkan 3 transaksi
+INSERT INTO transactions (user_id, transaction_date) VALUES
+  (1, NOW()),
+  (1, NOW()),
+  (1, NOW());
+
+INSERT INTO transactions (user_id, transaction_date) VALUES
+  (2, NOW()),
+  (2, NOW()),
+  (2, NOW());
+
+INSERT INTO transactions (user_id, transaction_date) VALUES
+  (3, NOW()),
+  (3, NOW()),
+  (3, NOW());
+
 
     1.i) Insert 3 product di masing-masing transaksi.
 
 2) Select
     2.a) Tampilkan nama user / pelanggan dengan gender Laki-laki / M.
+SELECT name
+FROM users
+WHERE gender IN ('Laki-laki', 'M');
+
 
     2.b) Tampilkan product dengan id = 3.
+SELECT *
+FROM products
+WHERE id = 3;
+
 
     2.c) Tampilkan data pelanggan yang created_at dalam range 7 hari kebelakang dan mempunyai nama mengandung kata ‘a’.
+SELECT *
+FROM users
+WHERE created_at >= NOW() - INTERVAL '7 days'
+AND name LIKE '%a%';
+
 
     2.d) Hitung jumlah user / pelanggan dengan status gender Perempuan.
+SELECT COUNT(*)
+FROM users
+WHERE gender = 'Perempuan';
+
 
     2.e) Tampilkan data pelanggan dengan urutan sesuai nama abjad
+SELECT *
+FROM users
+ORDER BY name;
+
 
     2.f) Tampilkan 5 data transaksi dengan product id = 3
+SELECT *
+FROM transactions
+WHERE id IN (SELECT transaction_id FROM transaction_details WHERE product_id = 3)
+LIMIT 5;
+
 
 3. Update
     3.a) Ubah data product id 1 dengan nama ‘product dummy’.
+UPDATE products
+SET name = 'Product Dummy'
+WHERE id = 1;
+
+
 
     3.b) Update qty = 3 pada transaction detail dengan product id 1.
+UPDATE transaction_details
+SET quantity = 3
+WHERE product_id = 1;
+
 
 4. Delete
     4.a) Delete data pada tabel product dengan id 1.
+DELETE FROM products
+WHERE id = 1;
+
 
     4.b) Delete pada tabel product dengan product-type id 1.
+DELETE FROM products_type
+WHERE id = 1;
+
 
 
 RELEASE 2: Join, Union, Sub-query, Function
 
 1. Gabungkan data transaksi dari user id 1 dan user id 2.
+SELECT *
+FROM transactions
+WHERE user_id IN (1, 2);
+
 
 2. Tampilkan jumlah harga transaksi user id 1.
+SELECT SUM(price * quantity) AS total_harga_transaksi
+FROM transaction_details
+WHERE transaction_id IN (SELECT id FROM transactions WHERE user_id = 1);
+
 
 3. Tampilkan total transaksi dengan product type 2.
+SELECT SUM(price * quantity) AS total_harga_transaksi
+FROM transaction_details
+WHERE product_id IN (SELECT id FROM products WHERE product_type_id = 2);
+
 
 4. Tampilkan semua field table product dan field name table product type yang saling berhubungan.
 
 5. Tampilkan semua field table transaction, field name table product dan field name table user.
 
 6. Tampilkan data products yang tidak pernah ada di tabel transaction_details dengan sub-query.
+SELECT *
+FROM products
+WHERE id NOT IN (SELECT DISTINCT product_id FROM transaction_details);
+

@@ -1,27 +1,83 @@
 1) Create database alta_online_shop.
 Sulisi SQL:
+CREATE DATABASE alta_online_shop
+    WITH
+    OWNER = postgres
+    ENCODING = 'UTF8'
+    LOCALE_PROVIDER = 'libc'
+    CONNECTION LIMIT = -1
+    IS_TEMPLATE = False;
 
 2) Dari schema Olshop yang telah kamu kerjakan di, Implementasikanlah menjadi table pada MySQL.
     2.a Create table user
-    Sulisi SQL:
+    Sulisi SQL: 
+create table pembeli (
+	id serial,
+	nama text,
+	alamat text,
+	email text unique,
+	primary key(id)
+);
 
     2.b Create table product, product_type, product_description, payment_method.
     Sulisi SQL:
+create table product (
+	id serial, 
+	nama text,
+	harga int,
+	SKU text unique,
+	primary key(id),
+);
 
+create table product_type (
+	id serial, 
+	nama text,
+	merk text,
+	primary key(id)
+);
+
+create table product_type (
+	id serial,
+	deskripsi text,
+	primary key(id)
+);
+
+create table payment_methods (
+	id serial, 
+	nama_bank text,
+	tanggal_transaksi timestamp,
+	primary key(id)
+);
     3.c Create table transaction, transaction detail.
     Sulisi SQL:
+create table transaction (
+	id serial, 
+	nama text,
+	tanggal timestamp,
+	primary key(id)
+);
 
 3) Create table kurir dengan field id, name, created_at, updated_at.
 Sulisi SQL:
+create table kurir (
+	id serial, 
+	nama text,
+	created_at timestamp,
+	updated_at timestamp,
+	primary key(id)
+);
 
 4) Tambahkan ongkos_dasar column di tabel kurir.
 Sulisi SQL:
+alter table kurir add column ongkos_dasar int;
 
 5) Rename tabel kurir menjadi shipping.
 Sulisi SQL:
+alter table kurir rename to shipping;
 
 6) Hapus / Drop tabel shipping karena ternyata tidak dibutuhkan.
 Sulisi SQL:
+drop table shipping;
 
 7) Silahkan menambahkan entity baru dengan relation 1-to-1, 1-to-many, many-to-many. Seperti:
     7.a) 1-to-1: payment_method dengan description.
